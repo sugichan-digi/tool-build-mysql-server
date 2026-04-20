@@ -1,0 +1,9 @@
+---
+- name: Setup MySQL Server
+  hosts: dbservers
+  become: yes
+  vars_files:
+    - group_vars/secret.yml
+  roles:
+    - common
+    - mysql
