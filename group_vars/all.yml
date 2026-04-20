@@ -1,0 +1,22 @@
+---
+server_memory_size: "2GB"
+
+# ---------------------------------------------------------
+# 以下、設定定義（通常は変更不要です）
+# ---------------------------------------------------------
+mysql_config_tiers:
+  "1GB":
+    innodb_buffer_pool_size: "512M"
+    max_connections: 100
+    innodb_log_file_size: "128M"
+    key_buffer_size: "32M"
+  "2GB":
+    innodb_buffer_pool_size: "1G"
+    max_connections: 200
+    innodb_log_file_size: "256M"
+    key_buffer_size: "64M"
+  "4GB":
+    innodb_buffer_pool_size: "2G"
+    max_connections: 400
+    innodb_log_file_size: "512M"
+    key_buffer_size: "128M"
