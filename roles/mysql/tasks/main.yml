@@ -11,8 +11,6 @@
   dnf:
     update_cache: yes
 
-
-
 - name: MySQLサーバーとAnsible用Pythonライブラリをインストールする (AlmaLinux 10向け)
   dnf:
     name:
@@ -51,6 +49,20 @@
 - name: ここまでの設定変更に伴う 再起動ハンドラー を今すぐ強制的に実行する
   meta: flush_handlers
 
+- name: MySQL rootの一時パスワードを取得する
+  shell: "grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}' | tail -n 1"
+  register: mysql_temp_password
+  changed_when: false
+  failed_when: mysql_temp_password.stdout == ""
+
+- name: MySQLのrootパスワードを初期パスワードから変更する
+  command: >
+    mysql --connect-expired-password
+    -uroot
+    -p'{{ mysql_temp_password.stdout }}'
+    -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';"
+  no_log: true
+  
 # ============================================================
 # 4. MySQL初期セキュリティ設定とデータベース構築
 # ============================================================
