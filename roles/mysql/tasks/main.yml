@@ -62,7 +62,7 @@
     -p'{{ mysql_temp_password.stdout }}'
     -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';"
   no_log: true
-  
+
 # ============================================================
 # 4. MySQL初期セキュリティ設定とデータベース構築
 # ============================================================
@@ -71,6 +71,7 @@
     name: root
     host: localhost
     password: "{{ mysql_root_password }}"
+    plugin: caching_sha2_password
     login_user: root
     login_password: "{{ mysql_root_password }}"
     check_implicit_admin: yes
@@ -87,6 +88,7 @@
   community.mysql.mysql_user:
     name: "{{ mysql_app_user }}"
     password: "{{ mysql_app_password }}"
+    plugin: caching_sha2_password
     priv: "*.*:ALL"
     host: "localhost"
     state: present
@@ -97,6 +99,7 @@
   community.mysql.mysql_user:
     name: "{{ mysql_maintainer_user }}"
     password: "{{ mysql_maintainer_password }}"
+    plugin: caching_sha2_password
     priv: "*.*:ALL"
     host: "localhost"
     state: present
