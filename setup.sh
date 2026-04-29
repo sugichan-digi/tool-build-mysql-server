@@ -41,12 +41,23 @@ if [ ! -f group_vars/secret.yml ]; then
 fi
 
 # ==============================================================================
-# 4. Ansible Playbook の実行
+# 4. AlmaLinux 10 向け MySQL パッケージの事前インストール
+# ==============================================================================
+if [ -f /etc/os-release ] && grep -q "VERSION_ID=\"10\"" /etc/os-release; then
+    echo "AlmaLinux 10 を検知しました。MySQL公式リポジトリとパッケージを事前にインストールします..."
+    dnf install -y https://dev.mysql.com/get/mysql84-community-release-el10-2.noarch.rpm
+    dnf repolist | grep mysql
+    dnf install -y mysql-community-server mysql-community-client python3-PyMySQL
+fi
+
+# ==============================================================================
+# 5. Ansible Playbook の実行
 # ==============================================================================
 echo "Playbook (site.yml) を実行し、環境構築を開始します..."
 echo "※各種設定は group_vars 内の値が使用されます。"
 
 ansible-playbook -i hosts site.yml
+
 
 echo "================================================="
 echo " セットアップスクリプトが正常に完了しました！ "
